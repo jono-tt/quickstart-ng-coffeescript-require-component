@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My ng App</title>
+
+    <!-- START: Script Includes: Replaced by Packager -->
+    <script src="../bower_components/requirejs/require.js" /></script>
+    <script>
+      require.config({
+        baseUrl: "../app/"
+      });
+  
+      require(["scripts/config"], function() {
+        require(["scripts/boot/boot-strapper"]);
+      });
+    </script>
+    <!-- END: Script Includes: Replaced by Packager -->
+  </head>
+  <body>
+    <div ng-view></div>
+  </body>
+</html>
