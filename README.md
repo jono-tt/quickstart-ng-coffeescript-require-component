@@ -1,11 +1,11 @@
-Quick Start - Angular, Coffeescript and RequireJS
+Component Quick Start - Angular, Coffeescript and RequireJS
 -------------------------------------------------
 
-[![Build Status](https://travis-ci.org/jono-tt/quickstart-ng-coffeescript-require-app.svg?branch=master)](https://travis-ci.org/jono-tt/quickstart-ng-coffeescript-require-app)
+[![Build Status](https://travis-ci.org/jono-tt/quickstart-ng-coffeescript-require-component.svg?branch=master)](https://travis-ci.org/jono-tt/quickstart-ng-coffeescript-require-component)
 
 Overview
 --------
-This is a template application to get you up and running with a solid implementation and structure of a angularJS single page app. The main point of this is to have RequireJS setup, allow you to write Coffeescript, run continuous testing in development mode with Testem and finally have an easy to use Packager that will package your application for deployment.
+This is a template component to get you up and running with a solid implementation and structure of angularJS. The main point of this is to have RequireJS setup, allow you to write Coffeescript, run continuous testing in development mode with Testem and finally have an easy to use Packager that will package your component for deployment.
 
 Requirements
 ------------
@@ -48,27 +48,19 @@ Project Packages and Classes Structure
 
 Packages and Coffeescript files structure: 
 
-- Application Code (app/scripts):
+- Component Code (app/scripts):
 
-    - `app`: For the Application properties
-    - `boot`: bootstrapper used to bootstrap an application with require
     - `controllers`: The application controllers
     - `directives`: namespace for all directives
-    - `helpers`: any helpers that are used widley
-    - `services`: namespace for all services
-    - `config.coffee`: contains the RequireJS config for all client side Shims, Paths and Includes
-        - Only add librarys that are absolutely nessesary
+    - `main.coffee`: contains all component internal dependencies
+        - This is where we build the component from so place all high level internal dependencies that you want packaged with your component
         - directives, services and controllers must be added as described below
 
 - Test Code (test/spec):
 
-    - `app`: For the Application properties
-    - `boot`: bootstrapper used to bootstrap an application with require
     - `controllers`: The application controllers
     - `directives`: namespace for all directives
-    - `services`: namespace for all services
     - `helpers`: any test helpers that are required
-    - `mocks`: Used for all mocking features
 
 Development
 -----------
@@ -89,7 +81,7 @@ This command runs the `Testem` framework and does the following:
     - Any coffeescript files requested from the server are compiled and returned as Javascript file
     - Map files are also served for easier debugging of Coffeescript
 
-- For running the "ci" task `npm test` you will need to install [PhantomJS](http://phantomjs.org/)
+- For running the "ci" task `npm test` you will need [PhantomJS](http://phantomjs.org/)
     - If automatic npm install doenst work then manual installs:
         - for MacOS: brew install phantomjs
         - for windows: http://phantomjs.org/download.html
@@ -108,11 +100,6 @@ This command runs the `Testem` framework and does the following:
     - Argument 'ExampleCtrl' is not aNaNunction, got undefined
         - Check that you have included the controller, service or directive in the RequireJS `define` statement within `app/scripts/boot/boot-strapper.coffee`
 
-Developing your Application
----------------------------
-Once your tests are running, you can then view the application in test mode by leaving the command `grunt test:develop` running and then browsing to:
-
-`http://localhost:7358/public/index.html`
 
 Developing (Services, Directives and Controllers)
 -------------------------------------------------
@@ -127,8 +114,8 @@ Naming Conventions:
 - Named with the convention of $camelCase for services:
     - $myExampleService
 
-- The reference to the resource must be added to the file app/scripts/boot/boot-strapper.coffee:
-    - define [..., "app/scripts/services/my-example-service"]
+- The reference to the resource must be added to the file app/scripts/main.coffee:
+    - define [..., "scripts/services/my-example-service"]
 
 - Each resource type should be in its own folder:
     - directives (app/scripts/directives)
@@ -200,37 +187,13 @@ Once coding is complete for a feature or a hotfix and you would like this to be 
 Build Scripts / Deployment
 --------------------------
 
-For building a the project into a minified version, run the following command:
+For building a the component into a minified version, run the following command:
 
 ```
 grunt --gruntfile PackageGruntFile.coffee
+or
+npm run-script package
 ```
 
-This will generate 2 output files target/application.js and target/application.min.js for the Javascript and copy all contents from the `public` folder into the `target` folder. The main index.html file also has the JS Includes changed to the minified JS `application.min.js` location.
-
-Runtime Environment
--------------------
-
-When the server is started up using the Procfile, enviroment variables are written to `env.js` file which is then included in the `index.html` page. The environment variables come from the servers runtime environment and are added as a white list of variables. The file located at `config/environment.env` contains JSON which describes the default values for the environment variables. These will be overriden by the runtime environment variables if they are present.
-
-To use these properties within the application, you can access the environment variables through an angularJS service called `$environmentService`:
-
-1. $environmentService.get("VARIABLE_NAME")  -> String of the environments variable value
-2. $environmentService.allKeys()  -> Array of all the environment variables
-
-**NB: This is useful for running multiple backend environments without having to change the frontend code per environment.**
-
-
-Heroku
-------
-
-It is really easy to deploy this solution to [Heroku](https://www.heroku.com/). All you need to do is have an Heroku account, create an app and then push your repo to the remote at heroku.
-
-Follow the Quickstart guide [here](https://devcenter.heroku.com/articles/quickstart).
-
-Remember to use the `config/environment.env` file to specify client side environment params. With heroku CLI tools, you can set those env properties per application:
-
-`heroku config:set MY_PROPERTY='this foo value'`
-
-
+This will generate 2 output files `dist/index.js` and `dist/index.min.js` for the Javascript and make the css all into one file at `dist/index.min.css`.
 

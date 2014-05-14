@@ -1,16 +1,45 @@
-coffee = require "coffee-script"
-
 module.exports = (grunt) ->
-  destFile = grunt.option("out-file") or "application"
 
-  #Write the environment VARS to the JS file: Ensure in the root as requirejs compile will fail
-  environment = require('./config/environment')
-  environment.writeJavascriptEnvironmentConfig("./env.js")
+  wrap = {
+    start: """
+      (function(glob) {
+        var define, require, defineCache;
+
+        if (glob.define) {
+          define = glob.define;
+          require = glob.require;
+        } else {
+          //Create a basic define and require statements to manage internal dependencies
+          defineCache = {};
+          require = function(deps, callback) {
+            var args = [], i = 0;
+            for (i=0; i < deps.length; i++) {
+              args.push(defineCache[deps[i]]);
+            }
+
+            return callback.apply(this, args);
+          };
+
+          define = function(name, deps, callback) {
+            if(!callback) {
+              callback = deps
+              deps = []
+            }
+            defineCache[name] = require.call(this, deps, callback);
+          };
+        }
+
+      """
+    end: """
+        
+      })(this);
+    """
+  }
 
   grunt.initConfig
 
     clean: 
-      build: ["target"]
+      build: ["target", "dist"]
 
     coffee:
       compile:
@@ -23,57 +52,38 @@ module.exports = (grunt) ->
         ]
 
     copy:
-      main:
+      dist:
         files: [{
           expand: true
-          src: ["**"]
-          cwd: "public/"
-          dest: "target/"
+          src: ["index.*"]
+          cwd: "target/"
+          dest: "dist/"
         }]
 
-    replace:
-      jsincludes:
-        src: ['public/index.html']
-        dest: 'target/index.html'
-        replacements: [{
-          from: /<!-- START: Script Includes: Replaced by Packager -->([\s\S]*?)<!-- END: Script Includes: Replaced by Packager -->/m
-          to: '''
-            <!--Injected By Packager-->
-            <script type="text/javascript" src="application.min.js" /></script>
-            <script type="text/javascript" src="env.js" /></script>
-            <script type="text/javascript">
-              require(["scripts/boot/boot-strapper"]);
-            </script>'''
-        }]
-
-      #Change the define statement in the vars so that we can override it with the env.js in the root folder
-      # each time the server is started.
-      envVars:
-        src: ['target/application*']
-        overwrite: true
-        replacements: [{
-          from: /define\([\'\"]env[\'\"]/m
-          to: 'define(\'env_old\''
-        }]
+    cssmin:
+      minify:
+        src: ['app/css/main.css']
+        dest: "dist/index.min.css"
 
     requirejs:
-      production:
+      dist:
         options:
           optimize: "uglify2"
-          mainConfigFile: "target/scripts/config.js"
           baseUrl: "target/"
-          generateSourceMaps: true
-          preserveLicenseComments: false
-          include: ["../bower_components/requirejs/require.js", "scripts/boot/boot-strapper"]
-          out: "target/" + destFile + ".min.js"
+          generateSourceMaps: false
+          preserveLicenseComments: true
+          name: "index"
+          out: "target/index.min.js"
+          skipModuleInsertion: true
 
       develop:
         options:
           optimize: "none"
-          mainConfigFile: "target/scripts/config.js"
           baseUrl: "target/"
-          include: ["../bower_components/requirejs/require", "scripts/boot/boot-strapper"]
-          out: "target/" + destFile + ".js"
+          include: ["scripts/main"]
+          out: "target/index.js"
+          wrap: wrap
+          skipModuleInsertion: true
 
     testem:
       jenkins:
@@ -82,7 +92,7 @@ module.exports = (grunt) ->
         options:
           src_files: [ "test/**/*.coffee" ]
           serve_files: [ "test/spec/**/*.coffee" ]
-          test_page: "test/minify-spec-runner.mustache"
+          test_page: "test/minified-spec-runner.mustache"
           launch_in_ci: [ "PhantomJS" ]
           fail_on_zero_tests: true
           reporter: "tap"
@@ -92,10 +102,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-testem"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-clean"
-  grunt.loadNpmTasks "grunt-text-replace"
+  grunt.loadNpmTasks "grunt-contrib-cssmin"
 
-  grunt.registerTask "write-environment-vars", ->
-    #Write the environment VARS to the JS file
-    environment.writeJavascriptEnvironmentConfig("target/env.js")
-
-  grunt.registerTask "default", ["clean:build", "coffee:compile", "requirejs", "testem:ci:jenkins", "copy:main", "replace", "write-environment-vars"]
+  grunt.registerTask "default", ["clean:build", "coffee:compile", "requirejs:develop", "requirejs:dist"
+    , "testem:ci:jenkins", "copy:dist", "cssmin:minify"]

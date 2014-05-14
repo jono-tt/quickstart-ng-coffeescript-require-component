@@ -29,7 +29,7 @@
           paths: {
             "runnerHelpers": "../test/spec/helpers/runner-helpers"
           },
-          deps: ["scripts/main"],
+          deps: ["../target/index"],
           callback: function() {
             var tests;
             tests = _.map(window.tests, function(item) {

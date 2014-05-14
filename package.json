@@ -1,8 +1,8 @@
 {
-  "name": "quickstart-ng-coffeescript-require-app",
-  "description": "Quickstart app to get Angular running with coffeescript and using requireJS",
+  "name": "quickstart-ng-coffeescript-require-component",
+  "description": "Quickstart component to get Angular running with coffeescript and using requireJS",
   "version": "0.1.0",
-  "homepage": "https://github.com/jono-tt/quickstart-ng-coffeescript-require-app",
+  "homepage": "https://github.com/jono-tt/quickstart-ng-coffeescript-require-component",
   "author": {
     "name": "Dev Team",
     "email": "jlangley@marinetransportint.com"
@@ -15,20 +15,21 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:jono-tt/quickstart-ng-coffeescript-require-app.git"
+    "url": "git@github.com:jono-tt/quickstart-ng-coffeescript-require-component.git"
   },
   "bugs": {
-    "url": "https://github.com/jono-tt/quickstart-ng-coffeescript-require-app/issues"
+    "url": "https://github.com/jono-tt/quickstart-ng-coffeescript-require-component/issues"
   },
   "scripts": {
-    "test": "./node_modules/grunt-cli/bin/grunt test:ci;",
-    "postinstall": "./node_modules/bower/bin/bower install;",
-    "prepublish": "echo Packaging with GRUNT; ./node_modules/grunt-cli/bin/grunt --gruntfile PackageGruntFile.coffee;"
+    "test": "grunt test:ci",
+    "postinstall": "bower install",
+    "prepublish": "grunt --gruntfile PackageGruntFile.coffee",
+    "package": "grunt --gruntfile PackageGruntFile.coffee"
   },
   "engines": {
     "node": ">=0.10.25"
   },
-  "dependencies": {
+  "devDependencies": {
     "express": "3.x",
     "bower": "~1.2.8",
     "grunt": "~0.4.4",
@@ -36,13 +37,13 @@
     "grunt-coffeelint": "~0.0.10",
     "grunt-contrib-watch": "~0.5.2",
     "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-testem": "git://github.com/inossidabile/grunt-contrib-testem#ef8a0a65bb8b283c2146b12b263344a9ec289560",
+    "grunt-contrib-testem": "~0.5.16",
     "grunt-newer": "~0.5.4",
     "phantomjs": "latest",
     "grunt-contrib-requirejs": "~0.4.3",
     "coffee-script": "~1.7.1",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-text-replace": "~0.3.11"
+    "grunt-contrib-cssmin": "^0.9.0"
   }
 }

@@ -1,8 +1,4 @@
 module.exports = (grunt) ->
-  #Always write the environment VARS to the JS file
-  environment = require('./config/environment')
-  environment.writeJavascriptEnvironmentConfig("env.js")
-
   grunt.initConfig
     coffeelint:
       options:

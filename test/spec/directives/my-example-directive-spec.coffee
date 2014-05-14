@@ -1,10 +1,8 @@
 define [
-  "app"
   "runnerHelpers"
-  "angularMocks"
   #TODO: Add your directive path here
   "scripts/directives/my-example-directive"
-], (app, RunnerHelpers) ->
+], (RunnerHelpers) ->
   
   describe "My Example Directive", ->
     #Create a runtime context the module

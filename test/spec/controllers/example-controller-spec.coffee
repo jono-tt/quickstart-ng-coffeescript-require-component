@@ -1,10 +1,8 @@
 define [
-  "app"
   "runnerHelpers"
-  "angularMocks"
   #TODO: Add your controller path here
   "scripts/controllers/example-controller"
-], (app, RunnerHelpers) ->
+], (RunnerHelpers) ->
   describe "Example Controller", ->
     ctx = RunnerHelpers.createControllerCtx 'ExampleCtrl', (ctx)->
       #TODO: You can change the current context before the controller

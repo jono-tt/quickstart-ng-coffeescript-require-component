@@ -1,11 +1,8 @@
 define [
-  "jquery"
-  "app"
-  "env"
-], ($, app, env) ->
+  "scripts/module"
+], (module) ->
 
-  app.module.controller "ExampleCtrl", ["$scope", "$http", ($scope, $http)->
+  module.controller "ExampleCtrl", ["$scope", "$http", ($scope, $http)->
     $scope.doAction = ->
       console.log "Action Taken"
-      console.log "These are the current environment vars from (config/environment.env): ", env
   ]

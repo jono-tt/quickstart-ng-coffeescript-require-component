@@ -1,0 +1,7 @@
+/*MAIN.css: Contains an ordered reference to all included css*/
+/*@import "YourCss"*/
+
+.qs-my-rule
+{
+  color: #FFFFFF;
+}

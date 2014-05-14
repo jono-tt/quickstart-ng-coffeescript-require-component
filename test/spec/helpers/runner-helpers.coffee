@@ -1,12 +1,9 @@
 define [
-  "angular"
-  "angularMocks"
-  "underscore"
-  "app"
-], (angular, mocks, _, app) ->
+  "scripts/module"
+], (pluginModule) ->
   beforeEach ->
-    #Load our application module for each test
-    module(app.name)
+    #Load our pluginModule module for each test
+    module(pluginModule.name)
 
     # Provide any mocks needed
     module ($provide) ->

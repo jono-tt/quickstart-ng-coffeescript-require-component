@@ -1,9 +1,8 @@
 define [
-  "jquery"
-  "app"
-], ($, app) ->
+  "scripts/module"
+], (module) ->
 
-  app.module.directive 'myDir', ($timeout, $rootScope, $location) ->
+  module.directive 'myDir', ($timeout, $rootScope, $location) ->
     restrict: 'A'
     require: 'ngModel'
     scope: true
